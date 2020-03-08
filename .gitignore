@@ -1,0 +1,9 @@
+node_modules/
+frontend/.cache/
+frontend/public/
+**/.env
+backend/media/
+**/da2719acad70.json
+dist
+.vscode
+.idea
