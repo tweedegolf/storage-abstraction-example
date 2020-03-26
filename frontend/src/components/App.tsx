@@ -1,17 +1,26 @@
-import React from 'react';
-import { Form } from './Form';
-import { Message } from './Message';
-import { ErrorBoundary } from './ErrorBoundary';
-import { ListUI as List } from './List';
-import { SelectStorage } from './SelectStorage';
-import { SelectBucket } from './SelectBucket';
-import { uploadFiles, deleteFile, selectStorage, getBucketContents, resetError, createBucket, deleteBucket } from '../actions';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { CreateAndDeleteBucket } from './CreateAndDeleteBucket';
+import React from "react";
+import { Form } from "./Form";
+import { Message } from "./Message";
+import { ErrorBoundary } from "./ErrorBoundary";
+import { ListUI as List } from "./List";
+import { SelectStorage } from "./SelectStorage";
+import { SelectBucket } from "./SelectBucket";
+import {
+  uploadFiles,
+  deleteFile,
+  selectStorage,
+  getBucketContents,
+  resetError,
+  createBucket,
+  deleteBucket,
+} from "../actions";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import { CreateAndDeleteBucket } from "./CreateAndDeleteBucket";
 
-const App = (props) => {
-  const uploadEnabled = props.message === null && props.selecteStorageId !== null && props.selectedBucket !== null;
+const App = props => {
+  const uploadEnabled =
+    props.message === null && props.selecteStorageId !== null && props.selectedBucket !== null;
   return (
     <ErrorBoundary>
       <Message message={props.message} resetError={props.resetError}></Message>
@@ -43,7 +52,7 @@ const App = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     files: state.files,
     types: state.types,
@@ -55,16 +64,19 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    uploadFiles,
-    deleteFile,
-    resetError,
-    createBucket,
-    deleteBucket,
-    getBucketContents,
-    selectStorageType: selectStorage,
-    // tslint:disable-next-line: align
-  }, dispatch);
+  return bindActionCreators(
+    {
+      uploadFiles,
+      deleteFile,
+      resetError,
+      createBucket,
+      deleteBucket,
+      getBucketContents,
+      selectStorageType: selectStorage,
+      // tslint:disable-next-line: align
+    },
+    dispatch
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

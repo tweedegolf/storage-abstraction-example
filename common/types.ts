@@ -1,4 +1,4 @@
-import { MediaFile } from '../backend/src/entities/MediaFile';
+import { MediaFile } from "../backend/src/entities/MediaFile";
 
 export type StorageInitData = {
   types: string[];

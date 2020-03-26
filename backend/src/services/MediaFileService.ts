@@ -1,58 +1,54 @@
-import fs from 'fs';
-import {
-  Storage,
-  StorageConfig,
-} from '@tweedegolf/storage-abstraction';
-import slugify from 'slugify';
-import uniquid from 'uniquid';
-import { Service, OnInit } from '@tsed/di';
-import { Readable } from 'stream';
-import {
-  getEnv,
-  getEnvOrDie,
-} from '../env';
-import { MediaFile } from '../entities/MediaFile';
-import { StorageInitData } from '../../../common/types';
-import { NotFound } from 'ts-httpexceptions';
+import fs from "fs";
+import { Storage, StorageConfig, StorageType } from "@tweedegolf/storage-abstraction";
+import slugify from "slugify";
+import uniquid from "uniquid";
+import { Service, OnInit } from "@tsed/di";
+import { Readable } from "stream";
+import { getEnv, getEnvOrDie } from "../env";
+import { MediaFile } from "../entities/MediaFile";
+import { StorageInitData } from "../../../common/types";
+import { NotFound } from "ts-httpexceptions";
 
 @Service()
 export class MediaFileService implements OnInit {
   private _configIds: string[] = [];
-  private _configs: { [id: string]: { type: string, config: StorageConfig } } = {};
+  private _configs: {
+    [id: string]: { type: string; config: StorageConfig };
+  } = {};
   private storage: Storage | null = null;
   private storageId: string | null = null;
 
   constructor() {
     this._configs = {
-      'Local disk storage': {
-        type: Storage.TYPE_LOCAL,
+      "Local disk storage": {
+        type: StorageType.LOCAL,
         config: {
-          bucketName: getEnv('STORAGE_1_BUCKETNAME'),
-          directory: getEnv('STORAGE_1_DIRECTORY'),
+          bucketName: getEnv("STORAGE_1_BUCKETNAME"),
+          directory: getEnv("STORAGE_1_DIRECTORY"),
         },
       },
-      'Amazon S3': {
-        type: Storage.TYPE_AMAZON_S3,
+      "Amazon S3": {
+        type: StorageType.S3,
         config: {
-          bucketName: getEnv('STORAGE_2_BUCKETNAME'),
-          accessKeyId: getEnv('STORAGE_2_KEY_ID'),
-          secretAccessKey: getEnv('STORAGE_2_ACCESS_KEY'),
+          bucketName: getEnv("STORAGE_2_BUCKETNAME"),
+          accessKeyId: getEnv("STORAGE_2_KEY_ID"),
+          secretAccessKey: getEnv("STORAGE_2_ACCESS_KEY"),
         },
       },
-      'Google Cloud 1': {
-        type: Storage.TYPE_GOOGLE_CLOUD,
+      "Google Cloud 1": {
+        type: StorageType.GCS,
         config: {
-          bucketName: getEnv('STORAGE_3_BUCKETNAME'),
-          projectId: getEnvOrDie('STORAGE_3_PROJECT_ID'),
-          keyFilename: getEnvOrDie('STORAGE_3_KEYFILE'),
+          bucketName: getEnv("STORAGE_3_BUCKETNAME"),
+          projectId: getEnvOrDie("STORAGE_3_PROJECT_ID"),
+          keyFilename: getEnvOrDie("STORAGE_3_KEYFILE"),
         },
       },
-      'Google Cloud 2': {
-        type: Storage.TYPE_GOOGLE_CLOUD,
+      "Google Cloud 2": {
+        type: StorageType.GCS,
         config: {
-          bucketName: getEnv('STORAGE_4_BUCKETNAME'),
-          projectId: getEnvOrDie('STORAGE_4_PROJECT_ID'),
-          keyFilename: getEnvOrDie('STORAGE_4_KEYFILE'),
+          bucketName: getEnv("STORAGE_4_BUCKETNAME"),
+          projectId: getEnvOrDie("STORAGE_4_PROJECT_ID"),
+          keyFilename: getEnvOrDie("STORAGE_4_KEYFILE"),
         },
       },
     };
@@ -90,7 +86,7 @@ export class MediaFileService implements OnInit {
   public async getInitData(): Promise<StorageInitData> {
     const numConfigs = Object.keys(this._configs).length;
     if (numConfigs === 0) {
-      throw new NotFound('no storage configuration found');
+      throw new NotFound("no storage configuration found");
     }
 
     if (numConfigs === 1 && this.storage === null) {
@@ -146,17 +142,20 @@ export class MediaFileService implements OnInit {
    * @param tempFile: uploaded file in temporary Multer storage
    * @param location?: the directory to save this file into, directory will be created if it doesn't exist
    */
-  public async moveUploadedFile(tempFile: Express.Multer.File, location?: string): Promise<MediaFile> {
+  public async moveUploadedFile(
+    tempFile: Express.Multer.File,
+    location?: string
+  ): Promise<MediaFile> {
     try {
       const slugName = `${uniquid()}_${slugify(tempFile.originalname)}`;
       let targetPath = slugName;
       if (location) {
-        const slugPath = location.split('/').map(d => slugify(d));
+        const slugPath = location.split("/").map(d => slugify(d));
         slugPath.push(slugName);
-        targetPath = slugPath.join('/');
+        targetPath = slugPath.join("/");
       }
 
-      if (typeof tempFile.buffer !== 'undefined') {
+      if (typeof tempFile.buffer !== "undefined") {
         await this.storage.addFileFromBuffer(tempFile.buffer, targetPath);
       } else {
         await this.storage.addFileFromPath(tempFile.path, targetPath);
@@ -202,7 +201,7 @@ export class MediaFileService implements OnInit {
 
   public async createBucket(bucketName: string): Promise<string[]> {
     if (this.storage === null) {
-      throw new NotFound('no storage selected yet');
+      throw new NotFound("no storage selected yet");
     }
     await this.storage.createBucket(bucketName);
     return this.storage.listBuckets();
@@ -210,7 +209,7 @@ export class MediaFileService implements OnInit {
 
   public async deleteBucket(bucketName: string): Promise<string[]> {
     if (this.storage === null) {
-      throw new NotFound('no storage selected yet');
+      throw new NotFound("no storage selected yet");
     }
     await this.storage.deleteBucket(bucketName);
     const buckets = await this.storage.listBuckets();

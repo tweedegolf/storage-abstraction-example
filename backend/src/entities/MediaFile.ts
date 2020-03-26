@@ -1,13 +1,12 @@
-import { Property, Required } from '@tsed/common';
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
-import { BaseMediaFile } from '../types';
-import { When } from './When';
-import { Description } from '@tsed/swagger';
+import { Property, Required } from "@tsed/common";
+import { Entity, PrimaryGeneratedColumn, Column, Index } from "typeorm";
+import { BaseMediaFile } from "../types";
+import { When } from "./When";
+import { Description } from "@tsed/swagger";
 
 @Entity()
-@Description('Metadata of an image')
+@Description("Metadata of an image")
 export class MediaFile implements BaseMediaFile {
-
   constructor(when?: When) {
     this.when = when ? when : new When();
   }

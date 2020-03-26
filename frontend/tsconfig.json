@@ -9,24 +9,10 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "allowJs": true,
-    "types": [
-      "node",
-      "express",
-      "react"
-    ],
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "lib": [
-      "dom",
-      "es6",
-      "es2017"
-    ],
+    "types": ["node", "express", "react"],
+    "typeRoots": ["./node_modules/@types"],
+    "lib": ["dom", "es6", "es2017"],
     "outDir": "build"
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "public"
-  ]
+  "exclude": ["node_modules", "build", "public"]
 }

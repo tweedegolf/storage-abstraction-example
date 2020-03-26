@@ -17,10 +17,10 @@ import {
   CREATING_BUCKET,
   BUCKET_DELETED,
   DELETING_BUCKET,
-} from './actions';
-import { AnyAction } from 'redux';
-import { RootState } from './types';
-import { StorageInitData } from '../../common/types';
+} from "./actions";
+import { AnyAction } from "redux";
+import { RootState } from "./types";
+import { StorageInitData } from "../../common/types";
 
 export function rootReducer(state: RootState, action: AnyAction): RootState {
   if (action.type === ERROR) {
@@ -33,12 +33,18 @@ export function rootReducer(state: RootState, action: AnyAction): RootState {
   if (action.type === GET_STORAGE_INIT_DATA) {
     return {
       ...state,
-      message: 'retrieving storage init data from server',
+      message: "retrieving storage init data from server",
     };
   }
 
   if (action.type === INIT_DATA_RECEIVED) {
-    const { files, types, buckets, selectedStorageId, selectedBucket } = action.payload as StorageInitData;
+    const {
+      files,
+      types,
+      buckets,
+      selectedStorageId,
+      selectedBucket,
+    } = action.payload as StorageInitData;
     return {
       ...state,
       files,
@@ -53,7 +59,7 @@ export function rootReducer(state: RootState, action: AnyAction): RootState {
   if (action.type === GET_STORAGE_TYPES) {
     return {
       ...state,
-      message: 'getting supported storage types from server',
+      message: "getting supported storage types from server",
     };
   }
 
@@ -105,12 +111,14 @@ export function rootReducer(state: RootState, action: AnyAction): RootState {
   if (action.type === UPLOADING_FILES) {
     return {
       ...state,
-      message: 'uploading files',
+      message: "uploading files",
     };
   }
 
   if (action.type === FILES_UPLOADED) {
-    const { payload: { files } } = action;
+    const {
+      payload: { files },
+    } = action;
     const newList = [...state.files, ...files];
     return {
       ...state,
@@ -122,12 +130,14 @@ export function rootReducer(state: RootState, action: AnyAction): RootState {
   if (action.type === DELETING_FILE) {
     return {
       ...state,
-      message: 'deleting file',
+      message: "deleting file",
     };
   }
 
   if (action.type === FILE_DELETED) {
-    const { payload: { id } } = action;
+    const {
+      payload: { id },
+    } = action;
     const tmp = parseInt(id, 10);
     const files = state.files.filter(f => f.id !== tmp);
     return {

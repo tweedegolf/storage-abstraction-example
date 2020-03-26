@@ -1,5 +1,5 @@
-import * as Sentry from '@sentry/node';
-import Express from 'express';
+import * as Sentry from "@sentry/node";
+import Express from "express";
 import {
   Err,
   GlobalErrorHandlerMiddleware,
@@ -8,10 +8,10 @@ import {
   OverrideProvider,
   Request,
   Response,
-} from '@tsed/common';
-import { Exception } from 'ts-httpexceptions';
-import { DescribedError } from '../types';
-import { isProduction } from '../env';
+} from "@tsed/common";
+import { Exception } from "ts-httpexceptions";
+import { DescribedError } from "../types";
+import { isProduction } from "../env";
 
 @OverrideProvider(GlobalErrorHandlerMiddleware)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -19,7 +19,7 @@ class GlobalJsonErrorHandlerMiddleware implements IMiddlewareError {
   public use(
     @Err() error: any,
     @Request() request: Express.Request,
-    @Response() response: Express.Response,
+    @Response() response: Express.Response
   ): any {
     this.setHeaders(response, error, error.origin);
 
@@ -30,9 +30,7 @@ class GlobalJsonErrorHandlerMiddleware implements IMiddlewareError {
       stack: description.stacktrace && isProduction() ? description.stacktrace : undefined,
     };
 
-    response
-      .status(description.status)
-      .send(responseData);
+    response.status(description.status).send(responseData);
 
     if (description.status === 500) {
       Sentry.captureEvent({
@@ -69,7 +67,7 @@ class GlobalJsonErrorHandlerMiddleware implements IMiddlewareError {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public setHeaders(response: Express.Response, ...args: IResponseError[]): void {
-    response.setHeader('Content-Type', 'application/json');
+    response.setHeader("Content-Type", "application/json");
   }
 
   private deconstructError(error: any): DescribedError {
@@ -82,7 +80,7 @@ class GlobalJsonErrorHandlerMiddleware implements IMiddlewareError {
       };
     }
 
-    if (typeof error === 'string') {
+    if (typeof error === "string") {
       return {
         status: 500,
         message: error,
@@ -92,7 +90,7 @@ class GlobalJsonErrorHandlerMiddleware implements IMiddlewareError {
     if (isProduction()) {
       return {
         status: 500,
-        message: 'Internal error',
+        message: "Internal error",
       };
     }
 

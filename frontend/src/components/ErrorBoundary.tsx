@@ -1,4 +1,4 @@
-import React, { Fragment, ErrorInfo } from 'react';
+import React, { Fragment, ErrorInfo } from "react";
 
 interface State {
   error: any | null;
@@ -16,10 +16,12 @@ class ErrorBoundary extends React.Component<{}, State> {
 
   render() {
     if (this.state.error) {
-      return <Fragment>
-        <h1>Something went wrong.</h1>
-        <div>{this.state.error.message}</div>
-      </Fragment>;
+      return (
+        <Fragment>
+          <h1>Something went wrong.</h1>
+          <div>{this.state.error.message}</div>
+        </Fragment>
+      );
     }
     return this.props.children;
   }

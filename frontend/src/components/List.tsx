@@ -1,7 +1,7 @@
-import React, { JSXElementConstructor } from 'react';
-import { Table, Button, Spinner, Media } from 'reactstrap';
-import { MediaFile } from '../../../backend/src/entities/MediaFile';
-import { getMediaDownloadUrl, getMediaThumbnailUrl } from '../api';
+import React, { JSXElementConstructor } from "react";
+import { Table, Button, Spinner, Media } from "reactstrap";
+import { MediaFile } from "../../../backend/src/entities/MediaFile";
+import { getMediaDownloadUrl, getMediaThumbnailUrl } from "../api";
 
 const sortDateUpdated = (mfA: MediaFile, mfB: MediaFile): number => {
   const dateA = new Date(mfA.when.updated);
@@ -21,45 +21,65 @@ const sortDateUpdated = (mfA: MediaFile, mfB: MediaFile): number => {
 // // TODO: open modal here
 // ></img>;
 
-const createImg = (mf: MediaFile): JSX.Element => <Media
-  object src={getMediaThumbnailUrl(mf)}
-  onClick={() => { window.open(getMediaDownloadUrl(mf)); }}
-/>;
+const createImg = (mf: MediaFile): JSX.Element => (
+  <Media
+    object
+    src={getMediaThumbnailUrl(mf)}
+    onClick={() => {
+      window.open(getMediaDownloadUrl(mf));
+    }}
+  />
+);
 
 export const ListUI = (props: {
-  files: MediaFile[],
-  selectedBucket: string,
-  deleteFile: (mf: MediaFile) => void,
+  files: MediaFile[];
+  selectedBucket: string;
+  deleteFile: (mf: MediaFile) => void;
 }) => {
   // if (typeof props.files === 'undefined' || props.files.length === 0) {
   //   return null;
   // }
   props.files.sort(sortDateUpdated);
 
-  const body = [<tr key="header">
-    <th>name</th>
-    <th>size</th>
-    {/* <th>path</th> */}
-    <th>thumb</th>
-  </tr>];
+  const body = [
+    <tr key="header">
+      <th>name</th>
+      <th>size</th>
+      {/* <th>path</th> */}
+      <th>thumb</th>
+    </tr>,
+  ];
   props.files.forEach((file, i) => {
-    body.push(<tr key={`${file.name}-file-${i}`}>
-      <td key={`${file.name}-name-${i}`}>{file.name}</td>
-      <td key={`${file.name}-size-${i}`}>{file.size}</td>
-      {/* <td key={`path-${i}`}>{file.path}</td> */}
-      <td key={`${file.name}-img-${i}`}>{createImg(file)}</td>
-      <td key={`${file.name}-delete-${i}`}><Button outline color="danger" onClick={() => { props.deleteFile(file); }}>delete</Button></td>
-    </tr>);
+    body.push(
+      <tr key={`${file.name}-file-${i}`}>
+        <td key={`${file.name}-name-${i}`}>{file.name}</td>
+        <td key={`${file.name}-size-${i}`}>{file.size}</td>
+        {/* <td key={`path-${i}`}>{file.path}</td> */}
+        <td key={`${file.name}-img-${i}`}>{createImg(file)}</td>
+        <td key={`${file.name}-delete-${i}`}>
+          <Button
+            outline
+            color="danger"
+            onClick={() => {
+              props.deleteFile(file);
+            }}
+          >
+            delete
+          </Button>
+        </td>
+      </tr>
+    );
   });
 
-  const header = props.selectedBucket === null ? 'No bucket selected' : `Files in bucket "${props.selectedBucket}"`;
+  const header =
+    props.selectedBucket === null
+      ? "No bucket selected"
+      : `Files in bucket "${props.selectedBucket}"`;
   return (
     <div>
       <h2>{header}</h2>
       <Table>
-        <tbody>
-          {body}
-        </tbody>
+        <tbody>{body}</tbody>
       </Table>
     </div>
   );

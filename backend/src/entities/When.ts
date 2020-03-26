@@ -1,17 +1,17 @@
-import { Column, BeforeInsert, BeforeUpdate } from 'typeorm';
-import { Format, Property } from '@tsed/common';
-import { Description } from '@tsed/swagger';
+import { Column, BeforeInsert, BeforeUpdate } from "typeorm";
+import { Format, Property } from "@tsed/common";
+import { Description } from "@tsed/swagger";
 
-@Description('Timestamp for item creation and modification')
+@Description("Timestamp for item creation and modification")
 export class When {
   @Column()
   @Property()
-  @Format('date-time')
+  @Format("date-time")
   public created!: Date;
 
   @Column()
   @Property()
-  @Format('date-time')
+  @Format("date-time")
   public updated!: Date;
 
   public constructor() {

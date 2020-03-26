@@ -1,9 +1,9 @@
-import path from 'path';
-import { Service, AfterRoutesInit, OnInit } from '@tsed/common';
-import { TypeORMService } from '@tsed/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
-import { MediaFile } from '../../entities/MediaFile';
-import { MediaFileService } from '../MediaFileService';
+import path from "path";
+import { Service, AfterRoutesInit, OnInit } from "@tsed/common";
+import { TypeORMService } from "@tsed/typeorm";
+import { Repository, DeleteResult } from "typeorm";
+import { MediaFile } from "../../entities/MediaFile";
+import { MediaFileService } from "../MediaFileService";
 
 @Service()
 export class MediaFileRepository implements AfterRoutesInit, OnInit {
@@ -11,28 +11,26 @@ export class MediaFileRepository implements AfterRoutesInit, OnInit {
 
   public constructor(
     private typeORMService: TypeORMService,
-    private mediaFileService: MediaFileService,
-  ) {
-  }
+    private mediaFileService: MediaFileService
+  ) {}
 
   private getOriginalFileName(p: string): string {
     const name = path.basename(p);
-    const underscore = name.lastIndexOf('_');
+    const underscore = name.lastIndexOf("_");
     if (underscore !== -1) {
       return name.substring(underscore + 1);
     }
     return name;
   }
 
-  public $onInit() {
-  }
+  public $onInit() {}
 
   public async $afterRoutesInit(): Promise<void> {
     return this.synchronize();
   }
 
   public async synchronize(): Promise<void> {
-    this.repository = this.typeORMService.get('tg').getRepository(MediaFile);
+    this.repository = this.typeORMService.get("tg").getRepository(MediaFile);
     // synchronize storage with database
     const storageFiles = await this.mediaFileService.getStoredFiles();
     const repositoryFiles = await this.repository.find();
@@ -51,7 +49,7 @@ export class MediaFileRepository implements AfterRoutesInit, OnInit {
 
     // remove files from database that are not in storage
     const notInStorage = [];
-    repositoryFiles.forEach((mf) => {
+    repositoryFiles.forEach(mf => {
       if (storageFiles.findIndex((data: [string, number]) => data[0] === mf.path) === -1) {
         notInStorage.push(mf);
       }
@@ -60,7 +58,7 @@ export class MediaFileRepository implements AfterRoutesInit, OnInit {
     await this.repository.remove(notInStorage);
   }
 
-  public async create(args: { name: string, path: string, size: number }[]): Promise<MediaFile[]> {
+  public async create(args: { name: string; path: string; size: number }[]): Promise<MediaFile[]> {
     const files = [];
     for (let i = 0; i < args.length; i += 1) {
       const mf = new MediaFile();

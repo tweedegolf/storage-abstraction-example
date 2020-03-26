@@ -1,22 +1,16 @@
-import {
-  Controller,
-  Get,
-  PathParams,
-  Post,
-  Delete,
-} from '@tsed/common';
-import { Returns, ReturnsArray } from '@tsed/swagger';
+import { Controller, Get, PathParams, Post, Delete } from "@tsed/common";
+import { Returns, ReturnsArray } from "@tsed/swagger";
 
-import { MediaFileService } from '../services/MediaFileService';
-import { MediaFileRepository } from '../services/repositories/MediaFileRepository';
-import { StorageInitData, BucketData } from '../../../common/types';
+import { MediaFileService } from "../services/MediaFileService";
+import { MediaFileRepository } from "../services/repositories/MediaFileRepository";
+import { StorageInitData, BucketData } from "../../../common/types";
 
-@Controller('/storage')
+@Controller("/storage")
 export class StorageController {
   public constructor(
     private readonly mediaFileService: MediaFileService,
-    private readonly mediaFileRepository: MediaFileRepository,
-  ) { }
+    private readonly mediaFileRepository: MediaFileRepository
+  ) {}
 
   private async getBucketData(buckets: string[]): Promise<BucketData> {
     let selectedBucket: string | null = null;
@@ -34,11 +28,10 @@ export class StorageController {
     };
   }
 
-  @Get('/init')
+  @Get("/init")
   @ReturnsArray(200, { type: String })
-  @Returns(500, { description: 'Internal server error' })
-  public async init(
-  ): Promise<StorageInitData> {
+  @Returns(500, { description: "Internal server error" })
+  public async init(): Promise<StorageInitData> {
     const data = await this.mediaFileService.getInitData();
     if (data.selectedBucket !== null) {
       await this.mediaFileRepository.synchronize();
@@ -47,33 +40,28 @@ export class StorageController {
     return data;
   }
 
-  @Get('/types')
+  @Get("/types")
   @ReturnsArray(200, { type: String })
-  @Returns(500, { description: 'Internal server error' })
-  public async getTypes(
-  ): Promise<string[]> {
+  @Returns(500, { description: "Internal server error" })
+  public async getTypes(): Promise<string[]> {
     // await new Promise((resolve) => { setTimeout(resolve, 1000); });
     return this.mediaFileService.types;
   }
 
-  @Get('/buckets/:storageId')
+  @Get("/buckets/:storageId")
   @ReturnsArray(200, { type: String })
-  @Returns(500, { description: 'Internal server error' })
-  public async getBuckets(
-    @PathParams('storageId') storageId: string,
-  ): Promise<BucketData> {
+  @Returns(500, { description: "Internal server error" })
+  public async getBuckets(@PathParams("storageId") storageId: string): Promise<BucketData> {
     this.mediaFileService.setStorageById(storageId);
     await this.mediaFileRepository.synchronize();
     const buckets = await this.mediaFileService.getBuckets();
     return this.getBucketData(buckets);
   }
 
-  @Post('/bucket/:bucketname')
+  @Post("/bucket/:bucketname")
   @ReturnsArray(200, { type: String })
-  @Returns(500, { description: 'Internal server error' })
-  public async createBucket(
-    @PathParams('bucketname') bucketName: string,
-  ): Promise<BucketData> {
+  @Returns(500, { description: "Internal server error" })
+  public async createBucket(@PathParams("bucketname") bucketName: string): Promise<BucketData> {
     const buckets = await this.mediaFileService.createBucket(bucketName);
     await this.mediaFileService.selectBucket(bucketName);
     return {
@@ -83,12 +71,10 @@ export class StorageController {
     };
   }
 
-  @Delete('/bucket/:bucketname')
+  @Delete("/bucket/:bucketname")
   @ReturnsArray(200, { type: String })
-  @Returns(500, { description: 'Internal server error' })
-  public async deleteBucket(
-    @PathParams('bucketname') bucketName: string,
-  ): Promise<BucketData> {
+  @Returns(500, { description: "Internal server error" })
+  public async deleteBucket(@PathParams("bucketname") bucketName: string): Promise<BucketData> {
     const buckets = await this.mediaFileService.deleteBucket(bucketName);
     return this.getBucketData(buckets);
   }
