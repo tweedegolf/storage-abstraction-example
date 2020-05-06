@@ -72,8 +72,8 @@ export class MediaFileController {
     res.set("Content-Type", mime.getType(mediaFile.path));
     res.set("Content-Disposition", "inline");
 
-    await new Promise(resolve => {
-      return pipeline(stream, res, err => {
+    await new Promise((resolve) => {
+      return pipeline(stream, res, (err) => {
         if (err) {
           throw new InternalServerError(err.message);
         } else {
@@ -107,8 +107,8 @@ export class MediaFileController {
     res.set("Content-Type", contentType);
     res.set("Content-Disposition", "inline");
 
-    await new Promise(resolve => {
-      return pipeline(stream, res, err => {
+    await new Promise((resolve) => {
+      return pipeline(stream, res, (err) => {
         if (err) {
           throw new InternalServerError(err.message);
         } else {

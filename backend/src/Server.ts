@@ -37,7 +37,8 @@ const rootDir = __dirname;
   mount: {
     "/api/v1": "${rootDir}/controllers/**/*.ts",
   },
-  componentsScan: [`${rootDir}/services/**/**.ts`, `${rootDir}/middlewares/**/**.ts`],
+  componentsScan: [`${rootDir}/services/**/**.ts`],
+  // componentsScan: [`${rootDir}/services/**/**.ts`, `${rootDir}/middlewares/**/**.ts`],
   typeorm: [
     {
       name: "tg",
@@ -95,6 +96,6 @@ new Server()
   .then(async () => {
     console.log("server running");
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });
