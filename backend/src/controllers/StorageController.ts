@@ -52,7 +52,7 @@ export class StorageController {
   @ReturnsArray(200, { type: String })
   @Returns(500, { description: "Internal server error" })
   public async getBuckets(@PathParams("storageId") storageId: string): Promise<BucketData> {
-    this.mediaFileService.setStorageById(storageId);
+    await this.mediaFileService.setStorageById(storageId);
     await this.mediaFileRepository.synchronize();
     const buckets = await this.mediaFileService.getBuckets();
     return this.getBucketData(buckets);
