@@ -13,7 +13,7 @@ import { NotFound } from "ts-httpexceptions";
 export class MediaFileService implements OnInit {
   private _configIds: string[] = [];
   private _configs: {
-    [id: string]: AdapterConfig;
+    [id: string]: AdapterConfig | string;
   } = {};
   private storage: Storage | null = null;
   private storageId: string | null = null;
@@ -36,12 +36,7 @@ export class MediaFileService implements OnInit {
         projectId: getEnvOrDie("STORAGE_3_PROJECT_ID"),
         keyFilename: getEnvOrDie("STORAGE_3_KEYFILE"),
       },
-      "Backblaze B2": {
-        type: StorageType.B2,
-        bucketName: getEnv("STORAGE_4_BUCKETNAME"),
-        applicationKeyId: getEnvOrDie("STORAGE_4_APPLICATION_KEY_ID"),
-        applicationKey: getEnvOrDie("STORAGE_4_APPLICATION_KEY"),
-      },
+      "Backblaze B2": getEnv("STORAGE_4_BACKBLAZE_B2"),
     };
     this._configIds = Object.keys(this._configs);
 
