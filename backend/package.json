@@ -22,7 +22,7 @@
     "@types/request": "^2.48.4",
     "@types/sharp": "^0.22.3",
     "@types/swagger-schema-official": "^2.0.20",
-    "ajv": "^6.12.2",
+    "ajv": "^6.12.3",
     "await-to-js": "^2.1.1",
     "aws-sdk": "^2.673.0",
     "axios": "^0.19.2",
